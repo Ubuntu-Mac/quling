@@ -21,24 +21,38 @@ public class VersionController {
     public String versionInformation() {
         String s = readGitProperties().split("\n")[2].split("=")[1];
         ClassLoader classLoader = getClass().getClassLoader();
-        InputStream inputStream = classLoader.getResourceAsStream("version.txt");
+        InputStream inputStream = classLoader.getResourceAsStream("git.commit.id.abbrev.txt");
+        InputStream inputStream1 = classLoader.getResourceAsStream("version.txt");
         StringBuilder stringBuilder=new StringBuilder();
-        float start=2.0f;
+        String s2=null;
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(inputStream,"utf-8"));
             String s1 = br.readLine();
+            BufferedReader br1 = new BufferedReader(new InputStreamReader(inputStream1,"utf-8"));
+            s2=br1.readLine();
             if (!s.equals(s1)){
-                start+=0.1f;
-                File file=new File("src/main/resources/version.txt");
+                double v = Double.valueOf(s2) + 0.1;
+                File file2=new File("src/main/resources/version.txt");
+                if (file2.exists()){
+                    file2.createNewFile();
+                }
+                FileOutputStream fileOutputStream2=new FileOutputStream(file2);
+                fileOutputStream2.write((v+"").getBytes("utf-8"));
+                File file=new File("src/main/resources/git.commit.id.abbrev.txt");
+                if (file.exists()){
+                    file.createNewFile();
+                }
                 FileOutputStream fileOutputStream=new FileOutputStream(file);
                 fileOutputStream.write(s.getBytes("utf-8"));
+                stringBuilder.append(v).append("+").append(s);
+            } else {
+                stringBuilder.append(s2).append("+").append(s);
             }
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        stringBuilder.append(start).append("+").append(s);
         return stringBuilder.toString();
     }
 
