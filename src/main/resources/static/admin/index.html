@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>测试版本</title>
+    <script src="../js/jquery-2.2.3.min.js"></script>
+</head>
+<body>
+    <div>
+        <span id="getVersion" onclick="changeVersion()"></span>
+    </div>
+</body>
+    <script>
+        var verison;
+        var Version;
+        var falg=false;
+        $.ajax({
+            url:"http://localhost:8080/getversion",
+            type:"get",
+            success:function (data) {
+                if (data){
+                    verison=data.split("+")[1];
+                    Version=data.split("+")[0];
+                    $("#getVersion").html(Version);
+                }
+            }
+        });
+        changeVersion=function () {
+            if (falg){
+                $("#getVersion").html(Version);
+                falg=false;
+            } else {
+                $("#getVersion").html(verison);
+                falg=true;
+            }
+        }
+    </script>
+</html>
